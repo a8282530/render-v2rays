@@ -7,30 +7,34 @@ ENV UUID=$UUID
 # 暴露端口
 EXPOSE $PORT
 
-# 直接启动命令
-CMD v2ray run -c - << EOF
-{
-  "inbounds": [{
-    "port": $PORT,
-    "protocol": "vmess",
-    "settings": {
-      "clients": [
-        {
-          "id": "$UUID",
-          "alterId": 0
-        }
-      ]
-    },
-    "streamSettings": {
-      "network": "ws",
-      "wsSettings": {
-        "path": "/ws"
-      }
-    }
-  }],
-  "outbounds": [{
-    "protocol": "freedom",
-    "settings": {}
-  }]
-}
-EOF
+# 创建启动脚本
+RUN echo '#!/bin/sh\n\
+v2ray run -c - << EOF\n\
+{\n\
+  "inbounds": [{\n\
+    "port": '$PORT',\n\
+    "protocol": "vmess",\n\
+    "settings": {\n\
+      "clients": [\n\
+        {\n\
+          "id": "'$UUID'",\n\
+          "alterId": 0\n\
+        }\n\
+      ]\n\
+    },\n\
+    "streamSettings": {\n\
+      "network": "ws",\n\
+      "wsSettings": {\n\
+        "path": "/ws"\n\
+      }\n\
+    }\n\
+  }],\n\
+  "outbounds": [{\n\
+    "protocol": "freedom",\n\
+    "settings": {}\n\
+  }]\n\
+}\n\
+EOF' > /start.sh && chmod +x /start.sh
+
+# 启动命令
+CMD ["/start.sh"]
