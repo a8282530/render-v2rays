@@ -10,5 +10,5 @@ COPY config.json /etc/v2ray/
 # 暴露端口
 EXPOSE $PORT
 
-# 启动命令
-CMD ["v2ray", "-config", "/etc/v2ray/config.json"]
+# 修改启动命令
+CMD ["v2ray", "run", "-c", "/etc/v2ray/config.json"]
