@@ -5,13 +5,16 @@
     "settings": {
       "clients": [
         {
-          "id": "5b72550e-8364-4183-aa32-12bd00d23909",
+          "id": "your-uuid-here",
           "alterId": 0
         }
       ]
     },
     "streamSettings": {
-      "network": "ws"
+      "network": "ws",
+      "wsSettings": {
+        "path": "/ws"
+      }
     }
   }],
   "outbounds": [{
