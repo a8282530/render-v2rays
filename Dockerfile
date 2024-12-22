@@ -3,40 +3,11 @@ FROM teddysun/v2ray
 # 设置工作目录
 WORKDIR /etc/v2ray
 
-# 创建启动脚本
-RUN echo '#!/bin/sh' > start.sh && \
-    echo 'cat > config.json << ENDOFFILE' >> start.sh && \
-    echo '{' >> start.sh && \
-    echo '  "inbounds": [{' >> start.sh && \
-    echo '    "port": '$PORT',' >> start.sh && \
-    echo '    "protocol": "vmess",' >> start.sh && \
-    echo '    "settings": {' >> start.sh && \
-    echo '      "clients": [' >> start.sh && \
-    echo '        {' >> start.sh && \
-    echo '          "id": "'$UUID'",' >> start.sh && \
-    echo '          "alterId": 0' >> start.sh && \
-    echo '        }' >> start.sh && \
-    echo '      ]' >> start.sh && \
-    echo '    },' >> start.sh && \
-    echo '    "streamSettings": {' >> start.sh && \
-    echo '      "network": "ws",' >> start.sh && \
-    echo '      "wsSettings": {' >> start.sh && \
-    echo '        "path": "/ws"' >> start.sh && \
-    echo '      }' >> start.sh && \
-    echo '    }' >> start.sh && \
-    echo '  }],' >> start.sh && \
-    echo '  "outbounds": [{' >> start.sh && \
-    echo '    "protocol": "freedom",' >> start.sh && \
-    echo '    "settings": {}' >> start.sh && \
-    echo '  }]' >> start.sh && \
-    echo '}' >> start.sh && \
-    echo 'ENDOFFILE' >> start.sh && \
-    echo 'cat config.json' >> start.sh && \
-    echo 'exec v2ray run -c config.json' >> start.sh && \
-    chmod +x start.sh
+# 创建配置文件
+RUN echo '{"inbounds":[{"port":10000,"protocol":"vmess","settings":{"clients":[{"id":"de04add9-5c68-8bab-950c-08cd5320df18","alterId":0}]},"streamSettings":{"network":"ws","wsSettings":{"path":"/ws"}}}],"outbounds":[{"protocol":"freedom","settings":{}}]}' > config.json
 
 # 暴露端口
-EXPOSE $PORT
+EXPOSE 10000
 
 # 启动命令
-ENTRYPOINT ["/bin/sh", "-c", "/etc/v2ray/start.sh"]
+CMD ["v2ray", "run", "-c", "/etc/v2ray/config.json"]
